@@ -1,0 +1,14 @@
+{
+  "name": "memorycore-ai",
+  "version": "0.4.2",
+  "description": "Memory Core SDK - Universal memory engine for AI bots. Redis + Qdrant + Neo4j.",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "keywords": ["memory","ai","bot","rag","vector","semantic-search","memorycore"],
+  "author": "Otel Group <info@otelgroup.ru>",
+  "license": "MIT",
+  "repository": {"type":"git","url":"https://github.com/aleksandrboss3090-code/memory-core-js-sdk.git"},
+  "homepage": "https://memorycore.ru",
+  "engines": {"node": ">=16.0.0"},
+  "files": ["src/","README.md","LICENSE"]
+}
