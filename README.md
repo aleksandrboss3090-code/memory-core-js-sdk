@@ -61,6 +61,15 @@ console.log(`Used: ${usage.used}/${usage.limit}`);
 | `importData(userId, records)` | Bulk import records |
 | `regenerateKey()` | Regenerate API key |
 
+### Soft Delete (v0.5.0)
+
+| Method | Description |
+|--------|-------------|
+| `forget(episodeId?, userId?, opts?)` | Soft delete with 30-day retention |
+| `trash(userId, limit?)` | View trash (soft-deleted records) |
+| `restore(opts)` | Restore from trash |
+| `purge(userId, forceAll?)` | Permanently delete (IRREVERSIBLE) |
+
 ## Examples
 
 ### Search
@@ -87,6 +96,56 @@ await memory.delete('user_42', { memoryId: 'uuid-here' });
 
 // Delete ALL user data
 await memory.delete('user_42', { deleteAll: true });
+```
+
+## 🗑️ Soft Delete (v0.5.0)
+
+Soft Delete provides a safety net — records are moved to trash with 30-day retention before permanent deletion.
+
+### Soft Delete a Record
+
+```javascript
+// Soft delete a specific record (moves to trash)
+await memory.forget('episode-uuid-here');
+
+// Soft delete all user records
+await memory.forget(null, 'user_42');
+```
+
+### View Trash
+
+```javascript
+// See what's in trash (up to 30 days retention)
+const trash = await memory.trash('user_42');
+console.log(`In trash: ${trash.total_in_trash} records`);
+
+trash.trash.forEach(item => {
+  console.log(`- ${item.id}: ${item.days_remaining} days until auto-purge`);
+});
+```
+
+### Restore from Trash
+
+```javascript
+// Restore specific records
+await memory.restore({
+  episodeIds: ['uuid-1', 'uuid-2', 'uuid-3']
+});
+
+// Restore ALL deleted records for user
+await memory.restore({
+  userId: 'user_42'
+});
+```
+
+### Permanently Delete (IRREVERSIBLE!)
+
+```javascript
+// Purge only records older than 30 days
+await memory.purge('user_42');
+
+// Purge ALL (including recent) — use with caution!
+await memory.purge('user_42', { forceAll: true });
 ```
 
 ## Links

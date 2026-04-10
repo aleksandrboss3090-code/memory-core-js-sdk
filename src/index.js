@@ -1,7 +1,7 @@
 /**
- * Memory Core SDK — JavaScript Client v0.4.2
+ * Memory Core SDK — JavaScript Client v0.5.0
  * Universal memory engine for AI bots.
- * 
+ *
  * @author Алита (Claude) для семьи Науменко
  * @product ООО «Отель Групп»
  * @see https://memorycore.ru
@@ -178,6 +178,57 @@ class MemoryClient {
     const result = await this._post('/account/regenerate-key', {});
     if (result.api_key) this.apiKey = result.api_key;
     return result;
+  }
+
+  // === SOFT DELETE METHODS (v0.5.0) ===
+
+  /**
+   * Soft delete — move to trash with 30-day retention (v0.5.0)
+   * @param {string} [episodeId] - UUID of specific record
+   * @param {string} [userId] - Delete all user records
+   * @param {Object} [opts]
+   */
+  async forget(episodeId, userId, opts = {}) {
+    if (episodeId) {
+      return this._delete(`/memory/forget/${episodeId}`);
+    }
+    return this._delete('/memory/delete', {
+      user_id: userId,
+      bot_id: opts.botId || this.botId,
+    });
+  }
+
+  /**
+   * View trash — soft-deleted records with days remaining (v0.5.0)
+   * @param {string} userId
+   * @param {number} [limit=20]
+   */
+  async trash(userId, limit = 20) {
+    return this._get(`/memory/trash?user_id=${encodeURIComponent(userId)}&limit=${limit}`);
+  }
+
+  /**
+   * Restore records from trash (v0.5.0)
+   * @param {Object} opts - { episodeIds: [...] } or { userId: "..." }
+   */
+  async restore(opts = {}) {
+    const payload = {};
+    if (opts.episodeIds) payload.episode_ids = opts.episodeIds;
+    if (opts.userId) payload.user_id = opts.userId;
+    if (opts.botId) payload.bot_id = opts.botId;
+    return this._post('/memory/restore', payload);
+  }
+
+  /**
+   * Permanently delete from trash — IRREVERSIBLE (v0.5.0)
+   * @param {string} userId
+   * @param {boolean} [forceAll=false] - true = purge ALL (even recent)
+   */
+  async purge(userId, forceAll = false) {
+    return this._delete('/memory/purge', {
+      user_id: userId,
+      force_all: forceAll,
+    });
   }
 
   // === SHORTCUTS ===

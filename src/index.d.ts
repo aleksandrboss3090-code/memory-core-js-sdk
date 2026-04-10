@@ -1,5 +1,5 @@
 /**
- * Memory Core SDK — TypeScript Definitions v0.4.2
+ * Memory Core SDK — TypeScript Definitions v0.5.0
  */
 
 export interface UpsertOptions {
@@ -35,6 +35,39 @@ export interface DeleteOptions {
 
 export interface ImportOptions {
   botId?: string;
+}
+
+export interface ForgetOptions {
+  botId?: string;
+}
+
+export interface RestoreOptions {
+  episodeIds?: string[];
+  userId?: string;
+  botId?: string;
+}
+
+export interface TrashItem {
+  id: string;
+  content: string;
+  days_remaining: number;
+  auto_purge_at: string;
+  deleted_at: string;
+}
+
+export interface TrashResponse {
+  total_in_trash: number;
+  trash: TrashItem[];
+}
+
+export interface RestoreResponse {
+  restored_count: number;
+  restored_ids: string[];
+}
+
+export interface PurgeResponse {
+  purged_count: number;
+  message: string;
 }
 
 export interface MemoryClientOptions {
@@ -79,6 +112,12 @@ export class MemoryClient {
   regenerateKey(): Promise<{ api_key: string; created_at: string }>;
   remember(userId: string, fact: string, opts?: UpsertOptions): Promise<any>;
   recall(userId: string, query: string, opts?: ContextOptions): Promise<any[]>;
+
+  // Soft Delete (v0.5.0)
+  forget(episodeId?: string, userId?: string, opts?: ForgetOptions): Promise<any>;
+  trash(userId: string, limit?: number): Promise<TrashResponse>;
+  restore(opts: RestoreOptions): Promise<RestoreResponse>;
+  purge(userId: string, forceAll?: boolean): Promise<PurgeResponse>;
 }
 
 export default MemoryClient;

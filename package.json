@@ -1,6 +1,6 @@
 {
   "name": "memorycore-ai",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Memory Core SDK - Universal memory engine for AI bots. Redis + Qdrant + Neo4j.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
