@@ -1,3 +1,9 @@
+# DEPRECATED
+
+**This SDK is deprecated.** Use the Memory Core REST API with your account: https://api.memorycore.ru/docs (sign up: https://memorycore.ru)
+
+---
+
 # Memory Core SDK (JavaScript)
 
 Universal memory engine for AI bots. 3 layers: Redis (Hot) + Qdrant (Warm) + Neo4j (Cold).
